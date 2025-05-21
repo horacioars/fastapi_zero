@@ -32,7 +32,7 @@ def create_user(user: UserSchema):
         id=len(database) + 1,
     )
     database.append(user_with_id)
-    return user
+    return user_with_id
 
 
 @app.get('/users/', status_code=HTTPStatus.OK, response_model=UserList)
@@ -40,16 +40,17 @@ def read_users():
     return {'users': database}
 
 
-@app.get('/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic)
-def read_user(user_id: int, user: UserSchema):
+@app.get('/users/{user_id}', response_model=UserPublic)
+def read_user(user_id: int):
     if user_id > len(database) or user_id < 1:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='User not found!'
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='User not found!',
         )
-                                
-    return database[user_id -1]
 
-    
+    return database[user_id - 1]
+
+
 @app.put(
     '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
 )
@@ -57,7 +58,8 @@ def update_users(user_id: int, user: UserSchema):
     user_with_id = UserDB(**user.model_dump(), id=user_id)
     if user_id > len(database) or user_id < 1:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='User not found!'
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='User not found!',
         )
 
     database[user_id - 1] = user_with_id
@@ -65,16 +67,16 @@ def update_users(user_id: int, user: UserSchema):
     return user_with_id
 
 
-@app.delete(
-    '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
-)
+@app.delete('/users/{user_id}', response_model=Message)
 def delete_user(user_id: int):
     if user_id > len(database) or user_id < 1:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='User not found!'
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='User not found!',
         )
 
-    return database.pop(user_id - 1)
+    database.pop(user_id - 1)
+    return {'message': 'User deleted'}
 
 
 @app.get('/exercicio-html', response_class=HTMLResponse)
