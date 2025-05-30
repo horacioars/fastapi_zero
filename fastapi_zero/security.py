@@ -14,7 +14,8 @@ from fastapi_zero.models import User
 from fastapi_zero.settings import Settings
 
 pwd_context = PasswordHash.recommended()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+settings = Settings()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 
 def get_password_hash(password: str):
@@ -29,12 +30,12 @@ def create_access_token(data: dict):
     to_encode = data.copy()
 
     expire = datetime.now(tz=ZoneInfo('UTC')) + timedelta(
-        minutes=Settings().ACCESS_TOKEN_EXPIRE_MINUTES
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
     to_encode.update({'exp': expire})
 
     encoded_jwt = encode(
-        to_encode, Settings().SECRET_KEY, algorithm=Settings().ALGORITHM
+        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
     )
 
     return encoded_jwt
@@ -52,7 +53,7 @@ def get_current_user(
 
     try:
         payload = decode(
-            token, Settings().SECRET_KEY, algorithms=Settings().ALGORITHM
+            token, settings.SECRET_KEY, algorithms=settings.ALGORITHM
         )
         subject_email = payload.get('sub')
         if not subject_email:
