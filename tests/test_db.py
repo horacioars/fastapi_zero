@@ -1,16 +1,21 @@
 from http import HTTPStatus
 
+import pytest
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi_zero.models import User
 
 
-def test_create_user(session):
+@pytest.mark.asyncio
+async def test_create_user(session: AsyncSession):
     new_user = User(username='alice', password='secret', email='teste@test')
     session.add(new_user)  # (1)!
-    session.commit()  # (2)!
+    await session.commit()  # (2)!
 
-    user = session.scalar(select(User).where(User.username == 'alice'))  # (3)!
+    user = await session.scalar(
+        select(User).where(User.username == 'alice')
+    )  # (3)!
 
     assert user.username == 'alice'
 
