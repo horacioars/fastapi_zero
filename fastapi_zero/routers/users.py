@@ -83,7 +83,7 @@ async def read_user(user_id: int, session: Session):
     return db_user
 
 
-@router.put('/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic)
+@router.put('/{user_id}', response_model=UserPublic)
 async def update_user(
     user_id: int,
     user: UserSchema,
@@ -92,7 +92,7 @@ async def update_user(
 ):
     if current_user.id != user_id:
         raise HTTPException(
-            status_code=HTTPException.FORBIDDEN,
+            status_code=HTTPStatus.FORBIDDEN,
             detail='Not enough permissions',
         )
 
@@ -118,7 +118,7 @@ async def delete_user(
 ):
     if current_user.id != user_id:
         raise HTTPException(
-            status_code=HTTPException.FORBIDDEN,
+            status_code=HTTPStatus.FORBIDDEN,
             detail='Not enough permissions',
         )
 
