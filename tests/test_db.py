@@ -18,6 +18,15 @@ async def test_create_user(session: AsyncSession):
     )  # (3)!
 
     assert user.username == 'alice'
+    # assert asdict(user) == {
+    #     'id': 1,
+    #     'username': 'alice',
+    #     'email': 'teste@test',
+    #     'password':'secret',
+    #     'created_at': time,
+    #     'updated_at': time,
+    #     'todos': [],
+    # }
 
 
 def test_get_user_should_return_not_found(client):
