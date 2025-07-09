@@ -12,7 +12,7 @@ class TodoState(str, Enum):
     todo = 'todo'
     doing = 'doing'
     done = 'done'
-    trashTRASH = 'trash'
+    trash = 'trash'
 
 
 @table_registry.mapped_as_dataclass
@@ -48,3 +48,12 @@ class Todo:
     description: Mapped[str]
     state: Mapped[TodoState]
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    created_at: Mapped[datetime] = mapped_column(
+        init=False,
+        server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        init=False,
+        server_default=func.now(),
+        onupdate=func.now()
+    )
