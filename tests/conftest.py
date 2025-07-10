@@ -9,7 +9,6 @@ from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from testcontainers.postgres import PostgresContainer
 
-
 from fastapi_zero.app import app
 from fastapi_zero.database import get_session
 from fastapi_zero.models import User, table_registry
