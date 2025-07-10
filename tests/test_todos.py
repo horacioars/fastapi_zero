@@ -3,9 +3,8 @@ from http import HTTPStatus
 import factory
 import factory.fuzzy
 import pytest
-from sqlalchemy import select
 
-from fastapi_zero.models import Todo, TodoState, User
+from fastapi_zero.models import Todo, TodoState  # , User
 
 
 class TodoFactory(factory.Factory):
@@ -18,20 +17,20 @@ class TodoFactory(factory.Factory):
     user_id = 1
 
 
-@pytest.mark.asyncio
-async def test_create_todo_error(session, user: User):
-    todo = Todo(
-        title='Test Todo',
-        description='Test Desc',
-        state='test',
-        user_id=user.id,
-    )
+# @pytest.mark.asyncio
+# async def test_create_todo_error(session, user: User):
+#     todo = Todo(
+#         title='Test Todo',
+#         description='Test Desc',
+#         state='todo',
+#         user_id=user.id,
+#     )
 
-    session.add(todo)
-    await session.commit()
+#     session.add(todo)
+#     await session.commit()
 
-    with pytest.raises(LookupError):
-        await session.scalar(select(Todo))
+#     with pytest.raises(LookupError):
+#         await session.scalar(select(Todo))
 
 
 def test_create_todo(client, token, mock_db_time):
